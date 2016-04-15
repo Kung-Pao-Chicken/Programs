@@ -1,0 +1,49 @@
+﻿@{
+    ViewBag.Title = "MyAdmin - 栏目管理";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="inputdialogback">
+    <table class="inputdialog">
+        <tr>
+            <td>
+                <span>文章名称:</span>
+                <input class="acticletitletext" id="acticletitletext" type="text" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span>文章来源:</span>
+                <input class="acticlecopyrighttext" id="acticlecopyrighttext" type="text" />
+            </td>
+        </tr>
+        <tr>
+            <td class="fenlei">
+                <span>文章分类:</span>
+                @Html.Raw(ViewBag.SelectBox)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input class="okbutton" type="button" value="OK" />
+                <input class="cancelbutton" type="button" value="Cancel" />
+            </td>
+        </tr>
+    </table>
+</div>
+
+<form action="/MyAdmin/CatContent" method="post">
+    <h2 style="display:inline;">栏目管理->@ViewBag.CatContentName&nbsp;(栏目ID = <span id="catcontentid">@ViewBag.CatContentID</span>)</h2><span style="margin-left:20px" class='listitemadd'><a id="add" href="#">增加</a></span>
+    <div class="attention">
+        <h4 style="display:inline;color:red">注意：</h4>
+        <span></span>
+    </div>
+    <table class="list">
+        <th>文章ID</th>
+        <th>文章标题</th>
+        <th>文章来源</th>
+        @Html.Raw(ViewBag.ActicleList)
+    </table>
+
+</form>
+<script src="@Url.Content("~/Content/Scripts/CatContent.js")"></script>

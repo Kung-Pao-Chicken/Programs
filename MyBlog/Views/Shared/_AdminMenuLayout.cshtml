@@ -1,0 +1,11 @@
+﻿<div class="menu">
+    <h3><a href='/MyAdmin/Project'>总项目管理</a></h3>
+    <h3>项目管理</h3>
+    <ul>
+        @Html.Raw(ViewBag.CategoryList)
+    </ul>
+    <h3><a href='/MyAdmin/CatContent'>栏目管理</a></h3>
+    <ul>
+        @Html.Raw(ViewBag.CatContentList)
+    </ul>
+</div>

@@ -1,0 +1,99 @@
+﻿@import "base.less";
+@indexheight:120px;
+@logowidth:140px;
+
+.listitemadd{
+        font-size:@normalfontsize;
+        float:right;
+        margin-right:@spanpadding * 2;
+        margin-top:5px;
+    }
+
+
+.list{
+    border-collapse:collapse;
+    width:100%;
+    margin-top:@spanpadding;
+    th{
+        text-align:left;
+    }
+    tr{
+        .listitemacticletitle{
+            width: 500px;
+        }
+        &:nth-of-type(odd){
+            background-color:white;
+        }
+        &:nth-of-type(even){
+            background-color:lighten(black,90%);
+        }
+        .listitemoption{
+            text-align:right;
+            .option{
+                margin-right:@spanpadding;
+            }
+        }
+        td{
+            padding-top:3px;
+            padding-bottom:3px;
+            border-top:dashed gray 1px;
+            border-bottom:dashed gray 1px;
+        }
+    }
+}
+
+.attention{
+    margin-top:@spanpadding;
+    border:solid lighten(black,50%) 1px;
+    background-color:lighten(black,80%);
+}
+
+.inputdialogback{
+    background-color:rgba(0, 0, 0, 0.60);
+    height:10000px;
+    width:10000px;
+    top:0;
+    left:0;
+    padding:@spanpadding * 2;
+    position:fixed;
+
+    .inputdialog{
+        @width:280px;
+        @height:80px;
+        border:solid gray 1px;
+        //width:@width;
+        //height:@height;
+        left:50%;
+        top:50%;
+        margin-top:-@height / 2;
+        margin-left:-@width / 2;
+        position:fixed;
+        background-color:white;
+        padding:@spanpadding * 2;
+        td{
+            border:none;
+            //padding-left:@spanpadding * 4;
+        }
+        input[type=button]{
+            width:80px;
+        }
+    }
+}
+
+.edui-container{
+    margin-top:10px;
+}
+
+.logo{
+    width:@logowidth;
+    float:left;
+    display:inline;
+    height:@indexheight - @spanpadding * 2;
+    text-align:center;
+    img{
+        margin-top:@spanpadding;
+        width:@logowidth - 5px; 
+        height:110px;
+            
+    }
+}

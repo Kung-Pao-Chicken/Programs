@@ -1,0 +1,23 @@
+﻿@{
+    ViewBag.Title = "MyBlog-" + ViewBag.ActicleTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="@Url.Content("~/Content/Styles/acticle.less")" rel="stylesheet/less" type="text/css" />
+<div class="acticlecontain">
+    <table>
+        <tr>
+            <td class="acticletd1">
+                <h2>@ViewBag.ActicleTitle</h2>
+                <span class="acticlesubject">来源：@ViewBag.ActicleCopyright</span><span class="acticlesubject">时间：@ViewBag.ActicleDate</span>
+            </td>
+
+        </tr>
+        <tr>
+            <td>
+                <div>
+                    <iframe class="acticleform" sandbox="" src="@ViewBag.ActicleContain"></iframe>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>

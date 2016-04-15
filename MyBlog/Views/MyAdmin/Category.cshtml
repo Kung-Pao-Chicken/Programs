@@ -1,0 +1,44 @@
+﻿@{
+    ViewBag.Title = "MyAdmin - 项目管理";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="inputdialogback">
+    <table class="inputdialog">
+        <tr>
+            <td>
+                <span>栏目名称:</span>
+                <input class="catnametext" id="catnametext" type="text" />
+            </td>
+        </tr>
+        <tr>
+            <td class="fenlei">
+                <span>栏目分类:</span>
+                @Html.Raw(ViewBag.SelectBox)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input class="okbutton" type="button" value="OK" />
+                <input class="cancelbutton" type="button" value="Cancel" />
+            </td>
+        </tr>
+    </table>
+</div>
+
+<form action="/MyAdmin/CategoryPost" method="post" enctype="multipart/form-data">
+    <h2 style="display: inline;">项目管理->@ViewBag.HeadTitle&nbsp;(项目ID = <span id="catid">@ViewBag.CatID</span>)</h2>
+    <span style="margin-left: 20px" class='listitemadd'><a id="add" href="#">增加</a></span>
+    <div class="attention">
+        <h4 style="display: inline; color: red">注意：</h4>
+        <span>删除栏目时，不会删除栏目下的文章。</span>
+    </div>
+    <table class="list">
+        <th>栏目ID</th>
+        <th>栏目名称</th>
+        <th>栏目图标</th>
+        @Html.Raw(ViewBag.CatContentList)
+    </table>
+
+</form>
+<script src="@Url.Content("~/Content/Scripts/Category.js")"></script>

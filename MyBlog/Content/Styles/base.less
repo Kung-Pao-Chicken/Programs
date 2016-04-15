@@ -1,0 +1,48 @@
+﻿@contentpadding:5px;
+@normalfontsize:13px;
+@largefontsize:15px;
+@smallfontsize:11px;
+@debugborder:solid black 1px;
+@spanpadding:5px;
+@mainwidth:@containerwidth - 200px;
+@containerwidth:1350px;
+@forecolor:black;
+@acolor:#003399;
+
+.div{
+    border:@debugborder;
+    padding:@contentpadding;
+}
+
+ul{
+    font-size:@normalfontsize;
+    padding-left:0px;
+    li{
+        list-style-type:none;
+    }
+}
+
+body{
+    font-size:@normalfontsize;
+    background-image:url(../Images/body_bg.jpg);
+}
+
+h2{
+    margin-top:10px;
+    margin-bottom:10px;
+}
+
+p{
+    word-break:break-all;
+}
+
+a{
+    text-decoration: none;
+    color:@acolor;
+    &:visited{
+        color:@acolor;
+    }
+    &:hover{
+        color:green;
+    }
+}

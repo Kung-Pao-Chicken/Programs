@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Menu>
+  <SubMenu Text="教程">
+    <Object LinkArg="CubieTruck">CubieTruck $count</Object>
+    <Object LinkArg="Less">Less $count</Object>
+    <Object LinkArg="SQLServer">SQL Server  $count</Object>
+  </SubMenu>
+  <SubMenu Text="开发">
+    <Object LinkArg="VB.NET">VB.NET $count</Object>
+    <Object LinkArg="C#">C# $count</Object>
+    <Object LinkArg="ASP.NET">ASP.NET $count</Object>
+  </SubMenu>
+</Menu>

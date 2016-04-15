@@ -1,0 +1,91 @@
+﻿<p>　　上一篇文章，我们了解了客户端如何与服务器创建WebSocket连接。但是一个巴掌拍不响，既然是通信，就必然最少要有两个端。今天我们来看看c#如何用已有的框架实现一个WebSocket服务端。</p><p>　　在.Net Framework 
+4.5及以上版本中，微软为我们集成了WebSocket协议的基本实现。微软提供的WebSocket对象位于
+System.Net.WebSocket命名空间下，使用起来挺繁琐的，所以我选择了SuperWebSocket框架来简化开发的难度。</p><p>　　SuperWebSocket框架可以通过NuGet直接获取并引用到项目中，也可以在<a href="http://superwebsocket.codeplex.com/">http://superwebsocket.codeplex.com/</a>中下载最新的DLL</p><p>　　我们来看SuperWebSocket如何我们快速搭建一个服务端</p><p>　　</p><div class="cnblogs_code"><img id="code_img_opened_bd814afc-34df-4b24-bf2f-1bc262e6d85a" class="code_img_opened" style="" src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt=""/><div style="display: block;" id="cnblogs_code_open_bd814afc-34df-4b24-bf2f-1bc262e6d85a" class="cnblogs_code_hide"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码" href="http://"><img src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"/></a></span></div><pre>WebSocketServer wsServer = <span style="color: #0000ff;">new</span><span style="color: #000000;"> WebSocketServer(); &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span style="color: #0000ff;">if</span> (!wsServer.Setup(<span style="color: #800000;">&quot;</span><span style="color: #800000;">127.0.0.1</span><span style="color: #800000;">&quot;</span>, <span style="color: #800080;">2012</span><span style="color: #000000;">))
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span style="color: #008000;">//</span><span style="color: #008000;">设置IP 与 端口失败 &nbsp;通常是IP 和端口范围不对引起的 IPV4 IPV6</span><span style="color: #000000;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">wsServer.Start())
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span style="color: #008000;">//</span><span style="color: #008000;">开启服务失败 基本上是端口被占用或者被 某杀毒软件拦截造成的</span>
+                <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;}
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;wsServer.NewSessionConnected </span>+= (session) =&gt;<span style="color: #000000;">
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span style="color: #008000;">//</span><span style="color: #008000;">有新的连接</span><span style="color: #000000;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;};
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;wsServer.SessionClosed </span>+= (session, reason) =&gt;<span style="color: #000000;">
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span style="color: #008000;">//</span><span style="color: #008000;">有断开的连接</span><span style="color: #000000;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;};
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;wsServer.NewMessageReceived </span>+= (session, message) =&gt;<span style="color: #000000;">
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span style="color: #008000;">//</span><span style="color: #008000;">接收到新的文本消息</span><span style="color: #000000;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;};
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;wsServer.NewDataReceived </span>+= (session, bytes) =&gt;<span style="color: #000000;">
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span style="color: #008000;">//</span><span style="color: #008000;">接收到新的二进制消息</span><span style="color: #000000;"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;};
+
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Console.ReadKey();
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;wsServer.Stop();</span></pre><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码" href="http://"><img src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"/></a></span></div></div></div><p>　　这里WebSocketServer对象通过Setup方式对要侦听的IP及端口进行了设置。然后使用Start方法启动侦听。</p><p>　　Setup方法有4种重载，但是我们通常用到的只有设置IP和端口，IP为string类型，如果传入的字符串无法被转换为支持的IP格式，Setup方法会返回false表示设置失败。</p><p>　　WebSocketServer还提供了4个事件用以管理与客户端的连接、断开、和接受消息动作。新版本的WebSocket支持传送的数据格
+式有 “文本” 和 
+“二进制”两种，NewMessageReceived事件用于处理文本类型的消息，NewDataReceived事件用于处理二进制类型的消息。</p><p>&nbsp;</p><p>　　</p><p>　　到这里 
+我们已经成功的搭建了一个实现了WebSocket协议的服务端了。至于服务端的寄宿方式有很多，SuperWebSocket框架支持以 
+控制台、Winform、IIS以及Windows服务的形式寄宿服务，不过网上很多资料都不建议在IIS中寄宿服务，据说是因为寄宿在IIS中性能比较
+低。</p><p>　　WebSocket既然是双工通信，那么我们就不能光等着接收来自客户端的消息， 我们也需要从服务端向客户端“推送”消息，现在我们来看如何由服务端向客户端发送消息。</p><p>　　SuperWebSocket框架中，服务端与客户端创建的连接对象为WebSocketSession类型，也就是说它将每一个客户端的实例
+视为一个会话，在客户端创建连接的时候，产生这个会话，在客户端断开连接的时候，销毁这个会话，而客户端与服务端进行消息通信的时候，也依赖这个会话进行
+传递。我们要实现服务器端向客户端的广播，就要获取到当前正在活动的所有会话，我们通过代码来看如何获取所有的会话</p><p>　　</p><div class="cnblogs_code"><pre> wsServer.GetAllSessions() <span style="color: #008000;">//</span><span style="color: #008000;">获取所有的会话 已断开的会话不会出现在集合中</span></pre></div><p>　　很简单吧，在获取到活动的会话之后 我们就可以向客户端发送消息了，这里我们让服务器向客户端定时发送服务器时间</p><div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码" href="http://"><img src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"/></a></span></div><pre>Timer timer = <span style="color: #0000ff;">new</span> Timer((data) =&gt;<span style="color: #000000;">
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span style="color: #0000ff;">var</span> msg = <span style="color: #0000ff;">string</span>.Format(<span style="color: #800000;">&quot;</span><span style="color: #800000;">服务器当前时间：{0:HH:MM:ss}</span><span style="color: #800000;">&quot;</span><span style="color: #000000;">, DateTime.Now); &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span style="color: #008000;">//</span><span style="color: #008000;">对当前已连接的所有会话进行广播</span>
+                <span style="color: #0000ff;">foreach</span> (<span style="color: #0000ff;">var</span> session <span style="color: #0000ff;">in</span><span style="color: #000000;"> wsServer.GetAllSessions())
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;session.Send(msg);
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;}
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;}, </span><span style="color: #0000ff;">null</span>, <span style="color: #800080;">1000</span>, <span style="color: #800080;">1000</span>);</pre><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码" href="http://"><img src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"/></a></span></div></div><p>　　这样 所有与服务端保持连接的客户端就都可以接受到来自服务器端的消息了。</p><p>　　在这个例子里 我们看到了所有的消息都是由会话对象发出的，会话对象Send的消息 也支持“文本”与“二进制两种形式，同时会话对象还提供一个SendCloseHandshakeResponse()方法向客户端发送一个强制断开连接的指令。</p><p>　　WebSocketSession对象包含了服务端和客户端的所有信息，以及WebSocketServer对象本身，我们可以利用它做很多事
+情，下边我们就来实现一个简单的聊天室。至于聊天室的原理 就是一个人将要说的话发送到服务器，再由服务器广播给在这个聊天室里的所有人看到。恩 
+就这么简单。我们来上代码，多了不解释，相当简单。</p><p>　　</p><div class="cnblogs_code"><img id="code_img_opened_a0430831-1dce-4361-905f-237813d3478d" class="code_img_opened" style="" src="http://images.cnblogs.com/OutliningIndicators/ExpandedBlockStart.gif" alt=""/><div style="display: block;" id="cnblogs_code_open_a0430831-1dce-4361-905f-237813d3478d" class="cnblogs_code_hide"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码" href="http://"><img src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"/></a></span></div><pre> <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> ChatWebSocket
+ &nbsp; &nbsp;{ &nbsp; &nbsp; &nbsp; &nbsp;</span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">const</span> <span style="color: #0000ff;">string</span> ip = <span style="color: #800000;">&quot;</span><span style="color: #800000;">127.0.0.1</span><span style="color: #800000;">&quot;</span><span style="color: #000000;">; &nbsp; &nbsp; &nbsp; &nbsp;</span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">const</span> <span style="color: #0000ff;">int</span> port = <span style="color: #800080;">2014</span><span style="color: #000000;">; &nbsp; &nbsp; &nbsp; &nbsp;</span><span style="color: #0000ff;">private</span> WebSocketServer ws = <span style="color: #0000ff;">null</span>;<span style="color: #008000;">//</span><span style="color: #008000;">SuperWebSocket中的WebSocketServer对象</span>
+
+        <span style="color: #0000ff;">public</span><span style="color: #000000;"> ChatWebSocket()
+ &nbsp; &nbsp; &nbsp; &nbsp;{
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;ws </span>= <span style="color: #0000ff;">new</span> WebSocketServer();<span style="color: #008000;">//</span><span style="color: #008000;">实例化WebSocketServer &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span style="color: #008000;">//</span><span style="color: #008000;">添加事件侦听</span>
+            ws.NewSessionConnected += ws_NewSessionConnected;<span style="color: #008000;">//</span><span style="color: #008000;">有新会话握手并连接成功</span>
+            ws.SessionClosed += ws_SessionClosed;<span style="color: #008000;">//</span><span style="color: #008000;">有会话被关闭 可能是服务端关闭 也可能是客户端关闭</span>
+            ws.NewMessageReceived += ws_NewMessageReceived;<span style="color: #008000;">//</span><span style="color: #008000;">有客户端发送新的消息</span><span style="color: #000000;"> &nbsp; &nbsp; &nbsp; &nbsp;} &nbsp; &nbsp; &nbsp; &nbsp;</span><span style="color: #0000ff;">void</span><span style="color: #000000;"> ws_NewSessionConnected(WebSocketSession session)
+ &nbsp; &nbsp; &nbsp; &nbsp;{
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Console.WriteLine(</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">{0:HH:MM:ss} &nbsp;与客户端:{1}创建新会话</span><span style="color: #800000;">&quot;</span><span style="color: #000000;">, DateTime.Now, GetSessionName(session)); &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span style="color: #0000ff;">var</span> msg = <span style="color: #0000ff;">string</span>.Format(<span style="color: #800000;">&quot;</span><span style="color: #800000;">{0:HH:MM:ss} {1} 进入聊天室</span><span style="color: #800000;">&quot;</span><span style="color: #000000;">, DateTime.Now, GetSessionName(session));
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;SendToAll(session, msg);
+ &nbsp; &nbsp; &nbsp; &nbsp;} &nbsp; &nbsp; &nbsp; &nbsp;</span><span style="color: #0000ff;">void</span><span style="color: #000000;"> ws_SessionClosed(WebSocketSession session, SuperSocket.SocketBase.CloseReason value)
+ &nbsp; &nbsp; &nbsp; &nbsp;{
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Console.WriteLine(</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">{0:HH:MM:ss} &nbsp;与客户端:{1}的会话被关闭 原因：{2}</span><span style="color: #800000;">&quot;</span><span style="color: #000000;">, DateTime.Now, GetSessionName(session), value); &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span style="color: #0000ff;">var</span> msg = <span style="color: #0000ff;">string</span>.Format(<span style="color: #800000;">&quot;</span><span style="color: #800000;">{0:HH:MM:ss} {1} 离开聊天室</span><span style="color: #800000;">&quot;</span><span style="color: #000000;">, DateTime.Now, GetSessionName(session));
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;SendToAll(session, msg);
+ &nbsp; &nbsp; &nbsp; &nbsp;} &nbsp; &nbsp; &nbsp; &nbsp;</span><span style="color: #0000ff;">void</span> ws_NewMessageReceived(WebSocketSession session, <span style="color: #0000ff;">string</span><span style="color: #000000;"> value)
+ &nbsp; &nbsp; &nbsp; &nbsp;{ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span style="color: #0000ff;">var</span> msg = <span style="color: #0000ff;">string</span>.Format(<span style="color: #800000;">&quot;</span><span style="color: #800000;">{0:HH:MM:ss} {1}说: {2}</span><span style="color: #800000;">&quot;</span><span style="color: #000000;">, DateTime.Now, GetSessionName(session), value);
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;SendToAll(session, msg);
+
+ &nbsp; &nbsp; &nbsp; &nbsp;} &nbsp; &nbsp; &nbsp; &nbsp;</span><span style="color: #808080;">///</span> <span style="color: #808080;">&lt;summary&gt;</span>
+        <span style="color: #808080;">///</span><span style="color: #008000;"> 启动服务 &nbsp; &nbsp; &nbsp; &nbsp;</span><span style="color: #808080;">///</span> <span style="color: #808080;">&lt;/summary&gt;</span>
+        <span style="color: #808080;">///</span> <span style="color: #808080;">&lt;returns&gt;&lt;/returns&gt;</span>
+        <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> Start()
+ &nbsp; &nbsp; &nbsp; &nbsp;{ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">ws.Setup(ip, port))
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Console.WriteLine(</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">ChatWebSocket 设置WebSocket服务侦听地址失败</span><span style="color: #800000;">&quot;</span><span style="color: #000000;">); &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">ws.Start())
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Console.WriteLine(</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">ChatWebSocket 启动WebSocket服务侦听失败</span><span style="color: #800000;">&quot;</span><span style="color: #000000;">); &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;}
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Console.WriteLine(</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">ChatWebSocket 启动服务成功</span><span style="color: #800000;">&quot;</span><span style="color: #000000;">);
+
+
+
+ &nbsp; &nbsp; &nbsp; &nbsp;} &nbsp; &nbsp; &nbsp; &nbsp;</span><span style="color: #808080;">///</span> <span style="color: #808080;">&lt;summary&gt;</span>
+        <span style="color: #808080;">///</span><span style="color: #008000;"> 停止侦听服务 &nbsp; &nbsp; &nbsp; &nbsp;</span><span style="color: #808080;">///</span> <span style="color: #808080;">&lt;/summary&gt;</span>
+        <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> Stop()
+ &nbsp; &nbsp; &nbsp; &nbsp;{ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span style="color: #0000ff;">if</span> (ws != <span style="color: #0000ff;">null</span><span style="color: #000000;">)
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;ws.Stop();
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;}
+ &nbsp; &nbsp; &nbsp; &nbsp;} &nbsp; &nbsp; &nbsp; &nbsp;</span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">string</span><span style="color: #000000;"> GetSessionName(WebSocketSession session)
+ &nbsp; &nbsp; &nbsp; &nbsp;{ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span style="color: #008000;">//</span><span style="color: #008000;">这里用Path来取Name 不太科学…… </span>
+            <span style="color: #0000ff;">return</span> HttpUtility.UrlDecode(session.Path.TrimStart(<span style="color: #800000;">&#39;</span><span style="color: #800000;">/</span><span style="color: #800000;">&#39;</span><span style="color: #000000;">));
+ &nbsp; &nbsp; &nbsp; &nbsp;} &nbsp; &nbsp; &nbsp; &nbsp;</span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">void</span> SendToAll(WebSocketSession session, <span style="color: #0000ff;">string</span><span style="color: #000000;"> msg)
+ &nbsp; &nbsp; &nbsp; &nbsp;{ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span style="color: #008000;">//</span><span style="color: #008000;">广播</span>
+            <span style="color: #0000ff;">foreach</span> (<span style="color: #0000ff;">var</span> sendSession <span style="color: #0000ff;">in</span><span style="color: #000000;"> session.AppServer.GetAllSessions())
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;sendSession.Send(msg);
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;}
+ &nbsp; &nbsp; &nbsp; &nbsp;}
+ &nbsp; &nbsp;}</span></pre><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码" href="http://"><img src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"/></a></span></div></div></div><p>　　关与SuperWebSocket的基本使用就介绍到这里了……顶着老板不时窥屏的压力，可能文章有点语无伦次，希望大家多多体谅，也希望大家提出宝贵意见 共同学习。下一篇我会考虑介绍“子协议”和SuperWebSocket提供的Json字符串类型数据的处理</p><p>&nbsp;</p><p>示例代码在这里&nbsp;&nbsp; <a href="http://files.cnblogs.com/ShadowLoki/WebSocketChatDemo.zip" target="_blank">下载</a></p><p><br/></p><br/><p>　<img src="http://images.cnitblog.com/i/340851/201405/131639236567620.jpg" alt=""/></p>

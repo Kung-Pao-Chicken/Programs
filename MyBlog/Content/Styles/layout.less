@@ -1,0 +1,43 @@
+﻿@import "base.less";
+
+h1{
+    font-size:60px;
+}
+
+.container{
+    margin-bottom: 0;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0;
+    width: @containerwidth;
+    height:1000px;
+    background-color:white;
+    padding:20px;
+
+    .main{
+        display:block;
+        float:right;
+        width:@mainwidth;
+    }
+
+    .slider{
+        height:auto;
+        float:left !important;
+        width:150px;
+        display:block;
+        .menu{
+            margin-left:10px;
+            ul{
+                margin-left:10px;
+            }
+            .list_header{
+                font-size:@largefontsize;
+                margin-bottom:0px;
+            }
+        }
+    }
+}
+
+.spandiv{
+    padding:@spanpadding;
+}

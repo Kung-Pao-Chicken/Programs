@@ -1,0 +1,36 @@
+﻿@{
+    ViewBag.Title = "MyAdmin - 总项目管理";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="inputdialogback">
+    <table class="inputdialog">
+        <tr>
+            <td>
+                <span>项目名称:</span>
+                <input class="catnametext" id="catname" type="text" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input class="okbutton" type="button" value="OK" />
+                <input class="cancelbutton" type="button" value="Cancel" />
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div>
+    <h2 style="display: inline;">总项目管理</h2>
+    <span style="margin-left: 20px" class='listitemadd'><a id="add" href="#">增加</a></span>
+    <div class="attention">
+        <h4 style="display: inline; color: red">注意：</h4>
+        <span>删除项目时，会连同栏目一同删除，但不会删除子栏目下的文章。</span>
+    </div>
+    <table class="list">
+        <th>项目名称</th>
+        <th>项目ID</th>
+        @Html.Raw(ViewBag.CategoryList)
+    </table>
+</div>
+<script src="@Url.Content("~/Content/Scripts/Project.js")"></script>

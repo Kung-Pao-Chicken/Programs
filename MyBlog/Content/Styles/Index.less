@@ -1,0 +1,52 @@
+﻿@import "base.less";
+
+@indexheight:120px;
+@logowidth:140px;
+.acticleindex{
+    height:@indexheight;
+    border-top:dashed gray 1px;
+    border-left:none;
+    border-right:none;
+    margin-left:@spanpadding;
+    margin-right:@spanpadding;
+
+    .indexacticlelogo{
+        width:@logowidth;
+        float:left;
+        display:inline;
+        height:@indexheight - @spanpadding * 2;
+        text-align:center;
+        img{
+            margin-top:@spanpadding;
+            width:@logowidth - 5px; 
+            height:110px;
+            
+        }
+    }
+    .indexcontain{
+        float:right;
+        display:inline;
+        width:@mainwidth - @logowidth - @spanpadding * 4;
+        height:@indexheight - @spanpadding * 2;
+        .indexacticletime{
+            font-size:@smallfontsize;
+            color:gray;
+        }
+        .indexacticletitle{
+            font-size:@largefontsize+6;
+            margin-top:@spanpadding;
+        }
+        .acticleabstract{
+            height:@indexheight - 30px;
+            font-size:@smallfontsize + 2;
+            overflow:hidden;
+            border:none;
+            width:100%;
+            height:65px;
+            padding-top:@spanpadding * 2;
+            resize: none;
+            color:black;
+            background-color:white;
+        }
+    }
+}

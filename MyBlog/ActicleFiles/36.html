@@ -1,0 +1,177 @@
+<div id="cnblogs_post_body"><h1 class="postTitle">数据库存取图片并在MVC3中显示在View中</h1>
+<div class="clear">根据路径读取图片：</div>
+<div class="clear">
+<div class="cnblogs_Highlighter sh-gutter">
+<div><div id="highlighter_778260" class="syntaxhighlighter  csharp"><div class="toolbar"><span><a href="#" class="toolbar_item command_help help">?</a></span></div><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="csharp keyword">byte</code><code class="csharp plain">[] img = System.IO.File.ReadAllBytes(</code><code class="csharp string">@"d:\xxxx.jpg"</code><code class="csharp plain">);</code></div></div></td></tr></tbody></table></div></div>
+</div>
+</div>
+<div class="postBody">
+<div id="cnblogs_post_body">
+<p>简介：在有些情况下需要将图片转换为二进制流存放在数据库中，当显示时再从数据库中读出来显示在界面上。</p>
+<p>本文简单介绍数据库中图片的存取方法，并在MVC3中显示在Razor视图中。仅供初学者参考学习。</p>
+<p>1. 将图片转换为二进制流</p>
+<div class="cnblogs_Highlighter sh-gutter">
+<div><div id="highlighter_840112" class="syntaxhighlighter  csharp"><div class="toolbar"><span><a href="#" class="toolbar_item command_help help">?</a></span></div><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div><div class="line number7 index6 alt2">7</div><div class="line number8 index7 alt1">8</div><div class="line number9 index8 alt2">9</div><div class="line number10 index9 alt1">10</div><div class="line number11 index10 alt2">11</div><div class="line number12 index11 alt1">12</div><div class="line number13 index12 alt2">13</div><div class="line number14 index13 alt1">14</div><div class="line number15 index14 alt2">15</div><div class="line number16 index15 alt1">16</div><div class="line number17 index16 alt2">17</div><div class="line number18 index17 alt1">18</div><div class="line number19 index18 alt2">19</div><div class="line number20 index19 alt1">20</div><div class="line number21 index20 alt2">21</div><div class="line number22 index21 alt1">22</div><div class="line number23 index22 alt2">23</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="csharp color1">/// &lt;summary&gt;</code></div><div class="line number2 index1 alt1">&nbsp;</div><div class="line number3 index2 alt2"><code class="csharp color1">/// convert a picture file to byte array&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </code></div><div class="line number4 index3 alt1">&nbsp;</div><div class="line number5 index4 alt2"><code class="csharp color1">/// &lt;/summary&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </code></div><div class="line number6 index5 alt1">&nbsp;</div><div class="line number7 index6 alt2"><code class="csharp spaces">&nbsp;</code><code class="csharp keyword">public</code> <code class="csharp keyword">byte</code><code class="csharp plain">[] GetBytesFromImage(</code><code class="csharp keyword">string</code> <code class="csharp plain">filename)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </code></div><div class="line number8 index7 alt1">&nbsp;</div><div class="line number9 index8 alt2"><code class="csharp plain">{&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </code></div><div class="line number10 index9 alt1">&nbsp;</div><div class="line number11 index10 alt2"><code class="csharp plain">　　FileStream fs = </code><code class="csharp keyword">new</code> <code class="csharp plain">FileStream(filename,FileMode.Open,FileAccess.Read);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </code></div><div class="line number12 index11 alt1">&nbsp;</div><div class="line number13 index12 alt2"><code class="csharp plain">　　</code><code class="csharp keyword">int</code> <code class="csharp plain">length = (</code><code class="csharp keyword">int</code><code class="csharp plain">)fs.Length;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </code></div><div class="line number14 index13 alt1">&nbsp;</div><div class="line number15 index14 alt2"><code class="csharp plain">　　</code><code class="csharp keyword">byte</code><code class="csharp plain">[] image = </code><code class="csharp keyword">new</code> <code class="csharp keyword">byte</code><code class="csharp plain">[length];&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </code></div><div class="line number16 index15 alt1">&nbsp;</div><div class="line number17 index16 alt2"><code class="csharp plain">　　fs.Read(image, 0, length);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </code></div><div class="line number18 index17 alt1">&nbsp;</div><div class="line number19 index18 alt2"><code class="csharp plain">　　fs.Close();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </code></div><div class="line number20 index19 alt1">&nbsp;</div><div class="line number21 index20 alt2"><code class="csharp plain">　　</code><code class="csharp keyword">return</code> <code class="csharp plain">image;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </code></div><div class="line number22 index21 alt1">&nbsp;</div><div class="line number23 index22 alt2"><code class="csharp plain">}</code></div></div></td></tr></tbody></table></div></div>
+</div>
+<p>　　</p>
+<p>2. 将二进制文件写入数据库</p>
+<div class="cnblogs_Highlighter sh-gutter">
+<div><div id="highlighter_176065" class="syntaxhighlighter  csharp"><div class="toolbar"><span><a href="#" class="toolbar_item command_help help">?</a></span></div><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div><div class="line number7 index6 alt2">7</div><div class="line number8 index7 alt1">8</div><div class="line number9 index8 alt2">9</div><div class="line number10 index9 alt1">10</div><div class="line number11 index10 alt2">11</div><div class="line number12 index11 alt1">12</div><div class="line number13 index12 alt2">13</div><div class="line number14 index13 alt1">14</div><div class="line number15 index14 alt2">15</div><div class="line number16 index15 alt1">16</div><div class="line number17 index16 alt2">17</div><div class="line number18 index17 alt1">18</div><div class="line number19 index18 alt2">19</div><div class="line number20 index19 alt1">20</div><div class="line number21 index20 alt2">21</div><div class="line number22 index21 alt1">22</div><div class="line number23 index22 alt2">23</div><div class="line number24 index23 alt1">24</div><div class="line number25 index24 alt2">25</div><div class="line number26 index25 alt1">26</div><div class="line number27 index26 alt2">27</div><div class="line number28 index27 alt1">28</div><div class="line number29 index28 alt2">29</div><div class="line number30 index29 alt1">30</div><div class="line number31 index30 alt2">31</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="csharp color1">/// &lt;summary&gt;</code></div><div class="line number2 index1 alt1">&nbsp;</div><div class="line number3 index2 alt2"><code class="csharp color1">///&nbsp; write byte array to database</code></div><div class="line number4 index3 alt1">&nbsp;</div><div class="line number5 index4 alt2"><code class="csharp color1">/// &lt;/summary&gt;</code></div><div class="line number6 index5 alt1">&nbsp;</div><div class="line number7 index6 alt2"><code class="csharp keyword">public</code> <code class="csharp keyword">void</code> <code class="csharp plain">StoreImageToDB(</code><code class="csharp keyword">byte</code><code class="csharp plain">[] image)</code></div><div class="line number8 index7 alt1">&nbsp;</div><div class="line number9 index8 alt2"><code class="csharp plain">{&nbsp;&nbsp;&nbsp; </code></div><div class="line number10 index9 alt1">&nbsp;</div><div class="line number11 index10 alt2"><code class="csharp plain">　　</code><code class="csharp keyword">string</code> <code class="csharp plain">connectionString = </code><code class="csharp string">"Data Source=.;Initial Catalog=MyDB;User Id=sa;Password=123456"</code><code class="csharp plain">;&nbsp;&nbsp;&nbsp; </code></div><div class="line number12 index11 alt1">&nbsp;</div><div class="line number13 index12 alt2"><code class="csharp plain">　　</code><code class="csharp keyword">string</code> <code class="csharp plain">strSql = </code><code class="csharp string">"INSERT INTO TestImage(image) Values(@image)"</code><code class="csharp plain">;</code></div><div class="line number14 index13 alt1">&nbsp;</div><div class="line number15 index14 alt2"><code class="csharp spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="csharp keyword">using</code> <code class="csharp plain">(SqlConnection connection = </code><code class="csharp keyword">new</code> <code class="csharp plain">SqlConnection(connectionString))&nbsp;&nbsp;&nbsp; </code></div><div class="line number16 index15 alt1">&nbsp;</div><div class="line number17 index16 alt2"><code class="csharp plain">　　{&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </code></div><div class="line number18 index17 alt1">&nbsp;</div><div class="line number19 index18 alt2"><code class="csharp plain">　　　　SqlCommand cmd = </code><code class="csharp keyword">new</code> <code class="csharp plain">SqlCommand(strSql,connection);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </code></div><div class="line number20 index19 alt1">&nbsp;</div><div class="line number21 index20 alt2"><code class="csharp plain">　　　　cmd.Parameters.Add(</code><code class="csharp string">"@image"</code><code class="csharp plain">, SqlDbType.Image).Value = image;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </code></div><div class="line number22 index21 alt1">&nbsp;</div><div class="line number23 index22 alt2"><code class="csharp plain">　　　　connection.Open();</code></div><div class="line number24 index23 alt1">&nbsp;</div><div class="line number25 index24 alt2"><code class="csharp plain">　　　　cmd.ExecuteNonQuery();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </code></div><div class="line number26 index25 alt1">&nbsp;</div><div class="line number27 index26 alt2"><code class="csharp plain">　　　　cmd.Clone();&nbsp;&nbsp;&nbsp; </code></div><div class="line number28 index27 alt1">&nbsp;</div><div class="line number29 index28 alt2"><code class="csharp plain">　&nbsp; }</code></div><div class="line number30 index29 alt1">&nbsp;</div><div class="line number31 index30 alt2"><code class="csharp plain">}</code></div></div></td></tr></tbody></table></div></div>
+</div>
+<p>　　</p>
+<p>3. 从数据库中读取图片</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #808080;">///</span> <span style="color: #808080;">&lt;summary&gt;</span>
+
+<span style="color: #808080;">///</span><span style="color: #008000;"> get image from database
+
+</span><span style="color: #808080;">///</span> <span style="color: #808080;">&lt;/summary&gt;</span>
+
+<span style="color: #0000ff;">public</span> <span style="color: #0000ff;">byte</span><span style="color: #000000;">[] GetBytesFromDB()
+
+ {    
+
+　　</span><span style="color: #0000ff;">string</span> connectionString = <span style="color: #800000;">"</span><span style="color: #800000;">Data Source=.;Initial Catalog=MyDB;User Id=sa;Password=123456</span><span style="color: #800000;">"</span><span style="color: #000000;">;    
+
+　　</span><span style="color: #0000ff;">string</span> strSql = <span style="color: #800000;">"</span><span style="color: #800000;">SELECT top 1 image FROM TestImage</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+
+     </span><span style="color: #0000ff;">using</span> (SqlConnection connection = <span style="color: #0000ff;">new</span><span style="color: #000000;"> SqlConnection(connectionString))    
+
+　　{        
+
+　　　　SqlCommand cmd </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> SqlCommand(strSql,connection);        
+
+　　　　connection.Open();
+
+           SqlDataReader reader </span>=<span style="color: #000000;"> cmd.ExecuteReader();        
+
+　　　　</span><span style="color: #0000ff;">byte</span>[] temp = <span style="color: #0000ff;">null</span><span style="color: #000000;">;        
+
+　　　　</span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (reader.Read())        
+
+　　　　{            
+
+　　　　　　 temp </span>= (<span style="color: #0000ff;">byte</span>[])reader.GetValue(<span style="color: #800080;">0</span><span style="color: #000000;">);        
+
+　　　　}        
+
+ 　　　</span><span style="color: #0000ff;">return</span><span style="color: #000000;"> temp;    
+
+　　}
+
+}</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>&nbsp;</p>
+<p>4. 在Controller中添加返回图片的方法</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #808080;">///</span> <span style="color: #808080;">&lt;summary&gt;</span>
+
+<span style="color: #808080;">///</span><span style="color: #008000;"> Action that return the image file
+
+ </span><span style="color: #808080;">///</span> <span style="color: #808080;">&lt;/summary&gt;</span>
+
+ <span style="color: #0000ff;">public</span><span style="color: #000000;"> FileResult Image()
+
+{   
+
+　　  </span><span style="color: #008000;">//</span><span style="color: #008000;">get image from database   </span>
+
+　　  <span style="color: #0000ff;">byte</span>[] image =<span style="color: #000000;"> GetBytesFromDB();
+
+   　  </span><span style="color: #008000;">//</span><span style="color: #008000;">return the image to View   </span>
+
+ 　　 <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span> FileContentResult(image, <span style="color: #800000;">"</span><span style="color: #800000;">image/jpeg</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+
+ 　　 </span><span style="color: #008000;">//</span><span style="color: #008000;">or like below   
+
+　　 </span><span style="color: #008000;">//</span><span style="color: #008000;">MemoryStream mem = new MemoryStream(image, 0, image.Length);   
+
+ 　　</span><span style="color: #008000;">//</span><span style="color: #008000;">return new FileStreamResult(mem, "image/jpg");</span>
+<span style="color: #000000;">
+}</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>5. 在View中显示图片, 将src指定为我们返回图片的Action方法</p>
+<div class="cnblogs_code">
+<pre>&lt;img alt=<span style="color: #800000;">""</span> src=<span style="color: #800000;">"</span><span style="color: #800000;">/Home/Image</span><span style="color: #800000;">"</span> /&gt;</pre>
+</div>
+<p>上面的方法都是我们自己实现且用SQL语句存取数据库，其实.NET框架已经给我们封装好了</p>
+<p>很多现成的类，再加上 EF 存取数据库可以使我们的代码变得更加 elegant。</p>
+<p>&nbsp;1. 前台上传图片</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div>
+<pre>@using (Html.BeginForm(<span style="color: #800000;">"</span><span style="color: #800000;">Edit</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">Admin</span><span style="color: #800000;">"</span><span style="color: #000000;">, FormMethod.Post, 
+
+    </span><span style="color: #0000ff;">new</span> { enctype = <span style="color: #800000;">"</span><span style="color: #800000;">multipart/form-data</span><span style="color: #800000;">"</span><span style="color: #000000;"> })) {
+
+</span>&lt;div&gt;Upload <span style="color: #0000ff;">new</span> image: &lt;input type=<span style="color: #800000;">"</span><span style="color: #800000;">file</span><span style="color: #800000;">"</span> name=<span style="color: #800000;">"</span><span style="color: #800000;">Image</span><span style="color: #800000;">"</span> /&gt;&lt;/div&gt;
+
+&lt;input type=<span style="color: #800000;">"</span><span style="color: #800000;">submit</span><span style="color: #800000;">"</span> value=<span style="color: #800000;">"</span><span style="color: #800000;">Save</span><span style="color: #800000;">"</span> /&gt;<span style="color: #000000;">
+
+}</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>&nbsp;</p>
+<p>它相当于 webform 中的 ：</p>
+<p>&lt;form action="/Admin/Edit" enctype="multipart/form-data" method="post"&gt;</p>
+<p>enctype = "multipart/form-data" 告诉浏览器将我们的文件流 post 到后台。</p>
+<p>2. 将图片存入数据库</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #000000;">[HttpPost]
+
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;"> ActionResult Edit(Product product, HttpPostedFileBase image) {
+
+　　</span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (ModelState.IsValid) {
+
+　　</span><span style="color: #0000ff;">if</span> (image != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+
+　　product.ImageMimeType </span>=<span style="color: #000000;"> image.ContentType;
+
+　　product.ImageData </span>= <span style="color: #0000ff;">new</span> <span style="color: #0000ff;">byte</span><span style="color: #000000;">[image.ContentLength];
+
+　　image.InputStream.Read(product.ImageData, </span><span style="color: #800080;">0</span><span style="color: #000000;">, image.ContentLength);
+
+　　}
+
+　　</span><span style="color: #008000;">//</span><span style="color: #008000;"> save the product</span>
+<span style="color: #000000;">
+　　repository.SaveProduct(product);
+
+　　</span><span style="color: #0000ff;">return</span> RedirectToAction(<span style="color: #800000;">"</span><span style="color: #800000;">Index</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+
+　　} </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+
+　　</span><span style="color: #008000;">//</span><span style="color: #008000;"> there is something wrong with the data values</span>
+
+　　<span style="color: #0000ff;">return</span><span style="color: #000000;"> View(product);
+
+　　}
+
+}</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>&nbsp;</p>
+<p>MVC框架会自动封装实例化我们的实体类和文件流并传到 post 方法中。</p>
+<p>其中 HttpPostedFileBase 是一个抽象类，实际传过来的对象</p>
+<p>是它的子类 HttpPostedFileWrapper 对象。</p>
+<p>HttpPostedFileBase 类定义了很多操作文件流的属性和接口。</p>
+<p>3. 在 view 中请求显示图片的 action</p>
+<p>&lt;img src="@Url.Action("GetImage", "Product", new { Model.ProductID })" /&gt;</p>
+<p>其中读取图片流的方法如下：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #0000ff;">public</span> FileContentResult GetImage(<span style="color: #0000ff;">int</span><span style="color: #000000;"> productId) {
+
+　　Product prod </span>= repository.Products.FirstOrDefault(p =&gt; p.ProductID ==<span style="color: #000000;"> productId);
+
+　　</span><span style="color: #0000ff;">if</span> (prod != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+
+　　</span><span style="color: #0000ff;">return</span><span style="color: #000000;"> File(prod.ImageData, prod.ImageMimeType);
+
+　　} </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+
+　　</span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+
+　  }
+
+}</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="http://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>&nbsp;</p>
+<p>其中&nbsp;FileContentResult &nbsp;是 ActionResult 的子类 ，action 的返回类型有很多种，它们都继承自抽象类&nbsp;ActionResult&nbsp;。</p>
+</div>
+</div></div>
